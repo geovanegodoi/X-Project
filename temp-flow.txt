@@ -1,0 +1,49 @@
+(1) Download FTP
+	- Connect FTP using url, username and password
+	- List *.txt files (pending extension)
+	- Copy all files locally (local path)
+	- Compare local files size against remote files
+	- If the file size is the same 
+		- Change the remote file extension to .done (done extension)
+		- Insert the record into table PG_FTP_DOWNLOAD_FILES, status download(1)
+	- Otherwise 
+		- Retry the single file download up to [n] attempts
+		- Case all attempts failed, did not change the remote file extension to .done (done extension)
+		- Insert a record into table PG_FTP_DOWNLOAD_FILES, with status download(0)
+		- Insert a fail record into PG_FTP_DOWNLOAD_LOG
+
+(2) Process Local File (DEFINE FILENAME PATTERN)
+	- Open local directory (local path)
+	- List all .txt files (pending extension)
+	- Foreach local files :
+		- Get the file name (DEFINE FILENAME PATTERN)
+		- Get the header columns
+		- Get the data rows and columns
+	- Insert the file into a FileCollection
+
+(3) Process Queries
+	- Open DB connection using connectionString, providerFactory
+	- Foreach FileCollection up to EOF
+	- Begin transaction
+	- Looks into QueryCollection for a filename matchs (DEFINE FILENAME PATTERN)
+	- When it matches create an DBCommand object
+		- Read the local file .txt (pending extension)
+		- Foreach local file row execute the query
+		- Get the parameters list
+		- Foreach parameter 
+			- Get the corresponding column value 
+			- Add into a command parameter list
+		- Execute the query
+		- If the query crashes 
+			- ROLLBACK transaction
+			- Insert a fail record into PG_FTP_DOWNLOAD_LOG
+			- Update record into table PG_FTP_DOWNLOAD_FILES, status upload(0)
+			- continue to next file
+	- When the local file EOF
+		- COMMIT transaction
+		- Change the local file extension .done (done extension)
+		- Update record into table PG_FTP_DOWNLOAD_FILES, status upload(1)
+	- When the FileCollection EOF
+		- Close DB connection
+	- Otherwise 
+		- Goto next local file
