@@ -60,12 +60,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigFile.cs" />
-    <Compile Include="CustomConfig.cs" />
-    <Compile Include="DataFile.cs" />
-    <Compile Include="EntitiesContext.cs" />
+    <Compile Include="BO\Interfaces\IDataFileProcessorBO.cs" />
+    <Compile Include="BO\Interfaces\IQueryProcessorBO.cs" />
+    <Compile Include="BO\QueryProcessorBO.cs" />
+    <Compile Include="ConfigurationExtensions\QueryDataSourceSettings.cs" />
+    <Compile Include="ConfigurationExtensions\QueryElement.cs" />
+    <Compile Include="ConfigurationExtensions\QueryCollection.cs" />
+    <Compile Include="ConfigurationExtensions\DinamycSQLSection.cs" />
+    <Compile Include="Config\ConfigFile.cs" />
+    <Compile Include="ConfigurationExtensions\QueryParameterElement.cs" />
+    <Compile Include="BO\DataFileProcessorBO.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ConfigurationExtensions\QueryParameterCollection.cs" />
+    <Compile Include="ConfigurationExtensions\QueryScriptSettings.cs" />
+    <Compile Include="Properties\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TO\DataFileContentTO.cs" />
+    <Compile Include="TO\DataFileHeaderTO.cs" />
+    <Compile Include="TO\FTPConnectionTO.cs" />
+    <Compile Include="TO\DBConnectionTO.cs" />
+    <Compile Include="DAO\Interfaces\IDBConnectionDAO.cs" />
+    <Compile Include="DAO\Interfaces\IFTPConnectionDAO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -74,7 +93,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Template.txt" />
+    <Content Include="Template.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
